@@ -10,3 +10,5 @@ export * from './address.controller';
 export * from './student-permissions.controller';
 export * from './login.controller';
 export * from './registration.controller';
+export * from './student-user-permissions.controller';
+export * from './user-permissions-permissions.controller';

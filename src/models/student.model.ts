@@ -1,7 +1,13 @@
-import {Entity, belongsTo, hasOne, model, property, hasMany} from '@loopback/repository';
+import {
+  Entity,
+  belongsTo,
+  hasMany,
+  hasOne,
+  model,
+  property,
+} from '@loopback/repository';
 import {Address} from './address.model';
 import {Department} from './department.model';
-import {Permissions} from './permissions.model';
 import {UserPermissions} from './user-permissions.model';
 
 @model()
@@ -58,8 +64,8 @@ export class Student extends Entity {
   @hasOne(() => Address)
   address: Address;
 
-  @hasMany(() => Permissions, {through: {model: () => UserPermissions}})
-  permissions: Permissions[];
+  @hasMany(() => UserPermissions)
+  userPermissions: UserPermissions[];
 
   constructor(data?: Partial<Student>) {
     super(data);

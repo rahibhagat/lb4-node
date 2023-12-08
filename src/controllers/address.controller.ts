@@ -32,7 +32,7 @@ export class AddressController {
   @authenticate('jwt')
   @authorize({
     resource: PermissionKeys.Address,
-    scopes: [RightsKeys.Write],
+    scopes: [RightsKeys.Edit],
   })
   @post('/addresses')
   @response(200, {

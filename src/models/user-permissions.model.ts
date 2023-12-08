@@ -1,4 +1,5 @@
-import {Entity, model, property} from '@loopback/repository';
+import {Entity, model, property, belongsTo} from '@loopback/repository';
+import {Permissions} from './permissions.model';
 
 @model()
 export class UserPermissions extends Entity {
@@ -13,16 +14,13 @@ export class UserPermissions extends Entity {
     type: 'number',
   })
   studentId?: number;
-
-  @property({
-    type: 'number',
-  })
-  permissionsId?: number;
-
   @property({
     type: 'string',
   })
   permission?: string;
+
+  @belongsTo(() => Permissions)
+  permissionsId: number;
 
   constructor(data?: Partial<UserPermissions>) {
     super(data);

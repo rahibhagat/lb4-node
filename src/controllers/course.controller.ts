@@ -1,3 +1,5 @@
+import {authenticate} from '@loopback/authentication';
+import {authorize} from '@loopback/authorization';
 import {
   Count,
   CountSchema,
@@ -7,25 +9,31 @@ import {
   Where,
 } from '@loopback/repository';
 import {
-  post,
-  param,
+  del,
   get,
   getModelSchemaRef,
+  param,
   patch,
+  post,
   put,
-  del,
   requestBody,
   response,
 } from '@loopback/rest';
+import {PermissionKeys, RightsKeys} from '../authorization/permission-keys';
 import {Course} from '../models';
 import {CourseRepository} from '../repositories';
 
 export class CourseController {
   constructor(
     @repository(CourseRepository)
-    public courseRepository : CourseRepository,
+    public courseRepository: CourseRepository,
   ) {}
 
+  @authenticate('jwt')
+  @authorize({
+    resource: PermissionKeys.Course,
+    scopes: [RightsKeys.Edit],
+  })
   @post('/courses')
   @response(200, {
     description: 'Course model instance',
@@ -37,7 +45,6 @@ export class CourseController {
         'application/json': {
           schema: getModelSchemaRef(Course, {
             title: 'NewCourse',
-            
           }),
         },
       },
@@ -52,9 +59,7 @@ export class CourseController {
     description: 'Course model count',
     content: {'application/json': {schema: CountSchema}},
   })
-  async count(
-    @param.where(Course) where?: Where<Course>,
-  ): Promise<Count> {
+  async count(@param.where(Course) where?: Where<Course>): Promise<Count> {
     return this.courseRepository.count(where);
   }
 
@@ -70,9 +75,7 @@ export class CourseController {
       },
     },
   })
-  async find(
-    @param.filter(Course) filter?: Filter<Course>,
-  ): Promise<Course[]> {
+  async find(@param.filter(Course) filter?: Filter<Course>): Promise<Course[]> {
     return this.courseRepository.find(filter);
   }
 
@@ -106,7 +109,8 @@ export class CourseController {
   })
   async findById(
     @param.path.number('id') id: number,
-    @param.filter(Course, {exclude: 'where'}) filter?: FilterExcludingWhere<Course>
+    @param.filter(Course, {exclude: 'where'})
+    filter?: FilterExcludingWhere<Course>,
   ): Promise<Course> {
     return this.courseRepository.findById(id, filter);
   }
